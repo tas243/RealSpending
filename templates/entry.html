@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}{{title}}{% endblock %}
+
+<br>
+
+{% block form %}
+<form action="/transactions" method="POST">
+    <div class="form-group">
+        <input type="integer" placeholder="How much?" name="amount">
+    </div>
+    <div class="form-group">
+        <label for="category">How did you Spend this money?:</label>
+        <select id="category" name="category">
+            <option value="Rent">Rent</option>
+            <option value="Gas">Gas</option>
+            <option value="Groceries">Groceries</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <input type="submit">
+    </div>
+</form>
+<br/>
+<br/>
+{% endblock %}

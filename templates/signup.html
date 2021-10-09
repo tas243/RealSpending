@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{{title}}{% endblock %}
+
+<br>
+
+{% block form %}
+<form action="/transactions" method="POST">
+    <div class="form-group">
+        <label for="first">First Name:</label>
+        <input type="text" placeholder="Dave" name="first">
+    </div>
+    <div class="form-group">
+        <label for="last">last Name:</label>
+        <input type="text" placeholder="Burd" name="last">
+    </div>
+    <div class="form-group">
+        <label for="username">Create A Username:</label>
+        <input type="text" placeholder="dave69" name="username">
+    </div>
+    <div class="form-group">
+        <label for="password">Create a password:</label>
+        <input type="password" placeholder="Maybe" name="password">
+    </div>
+    <div class="form-group">
+        <input type="submit">
+    </div>
+</form>
+<br/>
+<br/>
+{% endblock %}
