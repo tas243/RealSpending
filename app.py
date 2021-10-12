@@ -51,10 +51,13 @@ class users(db.Model):
 def signup():
     title = "Welcome! please feel free to create an account."
     if request.method   ==  "POST":
-        first_value     =   request.form['first']
-        last_value      =   request.form['last']
-        username_value  =   request.form['username']
-        passw_value     =   request.form['password']
+        req             =   request.form
+        # return jsonify(req)
+        # create a javascript object by uncommenting the above line
+        first_value     =   req['first']
+        last_value      =   req['last']
+        username_value  =   req['username']
+        passw_value     =   req['password']
         new_user        =   users(first=first_value, last=last_value, username=username_value, password=passw_value)
         try:
             db.session.add(new_user)
@@ -68,8 +71,10 @@ def signup():
 # def login():
 #     title = "Welcome, please log in."
 #     if request.method   ==  "POST":
-#         username        =   request.form['username']
-#         passw           =   request.form['password']
+#         db.query('tas243')
+#         req             =   request.form
+#         username        =   req['username']
+#         passw           =   req['password']
 
 @app.route('/transactions', methods=["POST", "GET"])
 def transactions():
