@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, jsonify, json
 from flask_sqlalchemy import SQLAlchemy
 import psycopg2
 from datetime import datetime
