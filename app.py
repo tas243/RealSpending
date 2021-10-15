@@ -3,17 +3,20 @@ from flask_sqlalchemy import SQLAlchemy
 import psycopg2
 from datetime import datetime
 from pytz import timezone
+from config import dbchar
 
 app = Flask(__name__)
 
 inputs = []
-
 # env\Scripts\activate.ps1 inserting this into powershell activates virtual environment
 
-app.config['SQLALCHEMY_DATABASE_URI']='postgresql://postgres:Rootwjzs16@localhost/var_inputs'
 app.config.from_object('config.Config')
 
 db = SQLAlchemy(app)
+
+con = dbchar()
+# If you want to open the cursor, type the following line
+# cur = con.cursor()
 
 #Create db model
 class transactions(db.Model):
@@ -38,14 +41,14 @@ class users(db.Model):
     password        =   db.Column(db.String(30), nullable=False)
     date            =   db.Column(db.DateTime, default=date3, nullable=False)
 
-    # @classmethod
-    # def login_password_check(self):
-    #     look for username
-    #         if username not in db ask to try again
-    #     see if password input is password with username in db
-    #         if password is incorrect for username
-    #             count number of times tried
-    #                 if 3 or 4 ask to change password through something
+    @classmethod
+    def login_password_check(self):
+        query = "SELECT username,password FROM function.users WHERE username = (%s)"
+        #     if username not in db ask to try again
+        # see if password input is password with username in db
+        #     if password is incorrect for username
+        #         count number of times tried
+        #             if 3 or 4 ask to change password through something
 
 @app.route('/', methods = ["POST", "GET"])
 def signup():
