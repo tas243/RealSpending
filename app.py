@@ -44,6 +44,7 @@ class users(db.Model):
     @classmethod
     def login_password_check(self):
         query = "SELECT username,password FROM function.users WHERE username = (%s)"
+        # Unsure how to call this function
         #     if username not in db ask to try again
         # see if password input is password with username in db
         #     if password is incorrect for username
@@ -62,11 +63,15 @@ def signup():
         username_value  =   req['username']
         passw_value     =   req['password']
         new_user        =   users(first=first_value, last=last_value, username=username_value, password=passw_value)
-        try:
-            db.session.add(new_user)
-            db.session.commit()
-        except:
-            return "Nice try"
+        query = "SELECT * FROM function.users WHERE username = '%s';" % username_value
+        cur = con.cursor()
+        cur.execute(query)
+        return cur.fetchone()
+        # try:
+        #     db.session.add(new_user)
+        #     db.session.commit()
+        # except:
+        #     return "Nice try"
     else:
         return render_template('signup.html', title=title)
 
