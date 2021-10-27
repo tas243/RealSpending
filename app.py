@@ -63,11 +63,11 @@ def signup():
         username_value  =   req['username']
         passw_value     =   req['password']
         new_user        =   users(first=first_value, last=last_value, username=username_value, password=passw_value)
-        query = "SELECT * FROM function.users WHERE username = '%s';" % username_value
+        query = "SELECT username,password FROM function.users WHERE username = '%s';" % username_value
         cur = con.cursor()
         cur.execute(query)
         data = cur.fetchone()
-        return render_template('hmm.html', data=data)
+        print(data[0]+data[1])
         # try:
         #     db.session.add(new_user)
         #     db.session.commit()
