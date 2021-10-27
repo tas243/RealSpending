@@ -14,7 +14,10 @@ app.config.from_object('config.Config')
 
 db = SQLAlchemy(app)
 
+# Create a function to open connection and cursor
+# Create a function to close both
 con = dbchar()
+# close con (connection?)
 # If you want to open the cursor, type the following line
 # cur = con.cursor()
 
@@ -42,14 +45,17 @@ class users(db.Model):
     date            =   db.Column(db.DateTime, default=date3, nullable=False)
 
     @classmethod
-    def login_password_check(self):
-        query = "SELECT username,password FROM function.users WHERE username = (%s)"
-        # Unsure how to call this function
-        #     if username not in db ask to try again
-        # see if password input is password with username in db
-        #     if password is incorrect for username
-        #         count number of times tried
-        #             if 3 or 4 ask to change password through something
+    def signup_username_check(self,username_value):
+        query = "SELECT username FROM function.users WHERE username = '%s';" % username_value
+        cur = con.cursor()
+        cur.execute(query)
+        data = cur.fetchone()
+        if data != None:
+            return "Unavailable"
+        if data == None:
+            return "Available"
+        # data is a tuple of the users in database
+        cor.close()
 
 @app.route('/', methods = ["POST", "GET"])
 def signup():
@@ -63,11 +69,17 @@ def signup():
         username_value  =   req['username']
         passw_value     =   req['password']
         new_user        =   users(first=first_value, last=last_value, username=username_value, password=passw_value)
-        query = "SELECT username,password FROM function.users WHERE username = '%s';" % username_value
-        cur = con.cursor()
-        cur.execute(query)
-        data = cur.fetchone()
-        print(data[0]+data[1])
+
+        # This calls the class method to go with the username table
+        user = users()
+        username_avail = user.signup_username_check(username_value)
+        if username_avail == "Available":
+            # push to database with all other information
+            print(Available)
+        else:
+            # Ask for a new username, since username is already taken
+            print(Unavailable)
+        
         # try:
         #     db.session.add(new_user)
         #     db.session.commit()
