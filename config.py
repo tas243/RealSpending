@@ -1,12 +1,22 @@
 import psycopg2
 
-def dbchar():
-    bd = {
+bd = {
         'user': 'postgres',
         'pw': 'Rootwjzs16',
         'host': 'localhost',
         'db': 'var_inputs'
-    }
+}
+
+def configlio():
+    return bd
+
+def dbchar():
+    # bd = {
+    #     'user': 'postgres',
+    #     'pw': 'Rootwjzs16',
+    #     'host': 'localhost',
+    #     'db': 'var_inputs'
+    # }
     cons = psycopg2.connect(user=bd['user'],
         password=bd['pw'],
         host=bd['host'],

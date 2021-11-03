@@ -3,13 +3,15 @@ from flask_sqlalchemy import SQLAlchemy
 import psycopg2
 from datetime import datetime
 from pytz import timezone
-from config import dbchar
+from config import dbchar, configlio
 
 app = Flask(__name__)
 
 # env\Scripts\activate.ps1 inserting this into powershell activates virtual environment
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Rootwjzs16@localhost/var_inputs'
+# Configuring Flas and database
+conf = configlio()
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:%s@localhost/%s' % (conf.get('pw'), conf.get('db'))
 app.config.from_object('config.Config')
 
 db = SQLAlchemy(app)
@@ -45,16 +47,16 @@ class users(db.Model):
     password        =   db.Column(db.String(30), nullable=False)
     date            =   db.Column(db.DateTime, default=date3, nullable=False)
 
-    # @classmethod
-    # def signup_username_check(self,username_value):
-    #     query = "SELECT username FROM function.users WHERE username = '%s';" % username_value
-    #     cur = con.cursor()
-    #     cur.execute(query)
-    #     data = cur.fetchone()
-    #     if data != None:
-    #         return "Unavailable"
-    #     if data == None:
-    #         return "Available"
+    @classmethod
+    def signup_username_check(self,username_value):
+        query = "SELECT username FROM function.users WHERE username = '%s';" % username_value
+        cur = con.cursor()
+        cur.execute(query)
+        data = cur.fetchone()
+        if data != None:
+            return "Unavailable"
+        if data == None:
+            return "Available"
         # data is a tuple of the users in database
 
 @app.route('/', methods = ["POST", "GET"])
@@ -69,7 +71,10 @@ def signup():
         username_value  =   req['username']
         passw_value     =   req['password']
         new_user        =   users(first=first_value, last=last_value, username=username_value, password=passw_value)
-
+###
+### Start here
+### get class method in users to work by calling it here and seeing if uesrname is already taken
+###
         # This calls the class method to go with the username table
         # user = users()
         # username_avail = user.signup_username_check(username_value)
