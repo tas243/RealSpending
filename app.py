@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 # env\Scripts\activate.ps1 inserting this into powershell activates virtual environment
 
-# Configuring Flas and database
+# Configuring Flask and database
 conf = configlio()
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:%s@localhost/%s' % (conf.get('pw'), conf.get('db'))
 app.config.from_object('config.Config')
@@ -20,7 +20,7 @@ db = SQLAlchemy(app)
 # Create a function to close both
 
 # con = dbchar()
-# close con (connection?)
+# close con (connection)?
 # If you want to open the cursor, type the following line
 # cur = con.cursor()
 
@@ -48,15 +48,22 @@ class users(db.Model):
     date            =   db.Column(db.DateTime, default=date3, nullable=False)
 
     @classmethod
-    def signup_username_check(self,username_value):
-        query = "SELECT username FROM function.users WHERE username = '%s';" % username_value
+    def signup_username_check(self,username_value,valuefinder):
+        ### Maybe add a parameter for if you are looking for a specific attribute, that is input and turned into the location in the tuple
+        # values = ['pk', 'firstname', 'lastname', 'username', 'password', 'date']
+        # finder = 0
+        # if valuefinder in values:
+        #     for i,j in enumerate(values):
+        #         if valuefinder == i:
+        #             finder = j
+        # print(finder)
+        con = dbchar()
+        query = "SELECT * FROM function.users WHERE username = '%s';" % username_value
         cur = con.cursor()
         cur.execute(query)
         data = cur.fetchone()
-        if data != None:
-            return "Unavailable"
-        if data == None:
-            return "Available"
+        return data
+        con.close()
         # data is a tuple of the users in database
 
 @app.route('/', methods = ["POST", "GET"])
@@ -71,25 +78,20 @@ def signup():
         username_value  =   req['username']
         passw_value     =   req['password']
         new_user        =   users(first=first_value, last=last_value, username=username_value, password=passw_value)
-###
-### Start here
-### get class method in users to work by calling it here and seeing if uesrname is already taken
-###
-        # This calls the class method to go with the username table
-        # user = users()
-        # username_avail = user.signup_username_check(username_value)
+        # This calls the class method to check if the username is taken
+        user = users()
+        db_uservalues = user.signup_username_check(username_value,'username')
+        # print(db_uservalues)
         # if username_avail == "Available":
-            # push to database with all other information
-            # print(Available)
+        #     try:
+        #         db.session.add(new_user)
+        #         db.session.commit()
+        #     except:
+        #         return "Nice Try"
         # else:
             # Ask for a new username, since username is already taken
-            # print(Unavailable)
+            # return "Username Taken"
         
-        try:
-            db.session.add(new_user)
-            db.session.commit()
-        except:
-            return "Nice try"
     else:
         return render_template('signup.html', title=title)
 
