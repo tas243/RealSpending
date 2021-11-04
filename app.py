@@ -50,19 +50,19 @@ class users(db.Model):
     @classmethod
     def signup_username_check(self,username_value,valuefinder):
         ### Maybe add a parameter for if you are looking for a specific attribute, that is input and turned into the location in the tuple
-        # values = ['pk', 'firstname', 'lastname', 'username', 'password', 'date']
-        # finder = 0
-        # if valuefinder in values:
-        #     for i,j in enumerate(values):
-        #         if valuefinder == i:
-        #             finder = j
-        # print(finder)
+        values = ['pk', 'firstname', 'lastname', 'username', 'password', 'date']
+        finder = 0
+        if valuefinder in values:
+            for i,j in enumerate(values):
+                if valuefinder == j:
+                    finder = i
+        print(finder)
         con = dbchar()
         query = "SELECT * FROM function.users WHERE username = '%s';" % username_value
         cur = con.cursor()
         cur.execute(query)
         data = cur.fetchone()
-        return data
+        return data[finder]
         con.close()
         # data is a tuple of the users in database
 
@@ -81,16 +81,15 @@ def signup():
         # This calls the class method to check if the username is taken
         user = users()
         db_uservalues = user.signup_username_check(username_value,'username')
-        # print(db_uservalues)
-        # if username_avail == "Available":
-        #     try:
-        #         db.session.add(new_user)
-        #         db.session.commit()
-        #     except:
-        #         return "Nice Try"
-        # else:
+        if db_uservalue != username_value:
+            try:
+                db.session.add(new_user)
+                db.session.commit()
+            except:
+                return "Nice Try"
+        else:
             # Ask for a new username, since username is already taken
-            # return "Username Taken"
+            return "Username Taken"
         
     else:
         return render_template('signup.html', title=title)
