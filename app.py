@@ -48,15 +48,16 @@ class users(db.Model):
     date            =   db.Column(db.DateTime, default=date3, nullable=False)
 
     @classmethod
-    def signup_username_check(self,username_value,valuefinder):
+    def search_user(self,username_value,valuefinder):
         ### Maybe add a parameter for if you are looking for a specific attribute, that is input and turned into the location in the tuple
-        values = ['pk', 'firstname', 'lastname', 'username', 'password', 'date']
-        finder = 0
-        if valuefinder in values:
-            for i,j in enumerate(values):
-                if valuefinder == j:
-                    finder = i
-        print(finder)
+        ### ^ basically be able to input what variables you want to grab at initializing the function and change the * in query to those values
+        # values = ['pk', 'firstname', 'lastname', 'username', 'password', 'date']
+        # finder = 0
+        # if valuefinder in values:
+        #     for i,j in enumerate(values):
+        #         if valuefinder == j:
+        #             finder = i
+        # print(finder)
         con = dbchar()
         query = "SELECT * FROM function.users WHERE username = '%s';" % username_value
         cur = con.cursor()
@@ -80,7 +81,7 @@ def signup():
         new_user        =   users(first=first_value, last=last_value, username=username_value, password=passw_value)
         # This calls the class method to check if the username is taken
         user = users()
-        db_uservalues = user.signup_username_check(username_value,'username')
+        db_uservalues = user.search_user(username_value,'username')
         if db_uservalue != username_value:
             try:
                 db.session.add(new_user)
