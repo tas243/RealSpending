@@ -49,21 +49,31 @@ class users(db.Model):
 
     @classmethod
     def search_user(self,username_value,valuefinder):
-        ### Maybe add a parameter for if you are looking for a specific attribute, that is input and turned into the location in the tuple
-        ### ^ basically be able to input what variables you want to grab at initializing the function and change the * in query to those values
-        # values = ['pk', 'firstname', 'lastname', 'username', 'password', 'date']
-        # finder = 0
-        # if valuefinder in values:
-        #     for i,j in enumerate(values):
-        #         if valuefinder == j:
-        #             finder = i
-        # print(finder)
+        values = ['pk', 'first', 'last', 'username', 'password', 'date']
+        finder = []
+        st = ''
+        length = len(st)
+        if length != 0:
+            for value in valuefinder:
+                if value in values:
+                    for i,j in enumerate(values):
+                        if value == j:
+                            finder.append(value)
+                            st += "%s," % j
+                else:
+                    print('"' + value + '"'  + ' is not a query tool')
+        else:
+            for i,j in enumerate(values):
+                if valuefinder == j:
+                    finder.append(valuefinder)
+                    st = "%s," % j
+        s = st[0:length-1]
         con = dbchar()
-        query = "SELECT * FROM function.users WHERE username = '%s';" % username_value
+        query = "SELECT %s FROM function.users WHERE username = '%s';" % (s, username_value)
         cur = con.cursor()
         cur.execute(query)
         data = cur.fetchone()
-        return data[finder]
+        return data
         con.close()
         # data is a tuple of the users in database
 
@@ -82,7 +92,7 @@ def signup():
         # This calls the class method to check if the username is taken
         user = users()
         db_uservalues = user.search_user(username_value,'username')
-        if db_uservalue != username_value:
+        if db_uservalues == None:
             try:
                 db.session.add(new_user)
                 db.session.commit()
