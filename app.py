@@ -73,9 +73,10 @@ class users(db.Model):
         cur = con.cursor()
         cur.execute(query)
         data = cur.fetchone()
-        return data
         con.close()
+        return data
         # data is a tuple of the users in database
+
 
 @app.route('/', methods = ["POST", "GET"])
 def signup():
@@ -101,9 +102,22 @@ def signup():
         else:
             # Ask for a new username, since username is already taken
             return "Username Taken"
-        
     else:
         return render_template('signup.html', title=title)
+
+
+@app.route('/Login', method = ["POST", "GET"])
+def login():
+    title = "Welcome back! Please login."
+    if request.method       ==  "POST":
+        req                 =   request.form
+        username_value      =   req['username']
+        passw_value         =   req['passowrd']
+        passw_check_value   =   req['password2']
+    else:
+        return render_template('login.html', title=title)
+        ## MAKE LOGIN HTML PAGE
+
 
 # @app.route('/transactions', methods=["POST", "GET"])
 # def transactions():
