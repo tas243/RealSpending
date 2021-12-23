@@ -7,7 +7,7 @@ from config import dbchar, configlio
 
 app = Flask(__name__)
 
-# env\Scripts\activate.ps1 inserting this into powershell activates virtual environment
+# env\Scripts\Activate.ps1 inserting this into powershell activates virtual environment
 
 # Configuring Flask and database
 conf = configlio()
@@ -114,27 +114,28 @@ def login():
         username_value      =   req['username']
         passw_value         =   req['passowrd']
         passw_check_value   =   req['password2']
+        transactions()
     else:
         return render_template('login.html', title=title)
         ## MAKE LOGIN HTML PAGE
 
 
-# @app.route('/transactions', methods=["POST", "GET"])
-# def transactions():
-#     title = "Input your transactions"
-#     if request.method   ==  "POST":
-#         amount_value    =   request.form['amount']
-#         category_value  =   request.form['category']
-#         new_row         =   transactions(amount=amount_value, category=category_value)
-#         # push to database
-#         try:
-#             db.session.add(new_row)
-#             db.session.commit()
-#             return redirect('/')
-#         except:
-#             return "There was an error, NICE"
-#     else:
-#         return render_template('entry.html', title=title)
+@app.route('/transactions', methods=["POST", "GET"])
+def transactions():
+    title = "Input your transactions"
+    if request.method   ==  "POST":
+        amount_value    =   request.form['amount']
+        category_value  =   request.form['category']
+        new_row         =   transactions(amount=amount_value, category=category_value)
+        # push to database
+        try:
+            db.session.add(new_row)
+            db.session.commit()
+            return redirect('/')
+        except:
+            return "There was an error, NICE"
+    else:
+        return render_template('entry.html', title=title)
 
 if __name__ == "__main__":
     app.run(debug=True)
