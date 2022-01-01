@@ -77,6 +77,10 @@ class users(db.Model):
         return data
         # data is a tuple of the users in database
 
+# @app.route('/', methods = ["POST", "GET"])
+# def test():
+#     title = "Test Page"
+#     return render_template('test.html', title=title)
 
 @app.route('/', methods = ["POST", "GET"])
 def signup():
@@ -106,18 +110,18 @@ def signup():
         return render_template('signup.html', title=title)
 
 
-@app.route('/Login', method = ["POST", "GET"])
-def login():
-    title = "Welcome back! Please login."
-    if request.method       ==  "POST":
-        req                 =   request.form
-        username_value      =   req['username']
-        passw_value         =   req['passowrd']
-        passw_check_value   =   req['password2']
-        transactions()
-    else:
-        return render_template('login.html', title=title)
-        ## MAKE LOGIN HTML PAGE
+# @app.route('/Login', method = ["POST", "GET"])
+# def login():
+#     title = "Welcome back! Please login."
+#     if request.method       ==  "POST":
+#         req                 =   request.form
+#         # username_value      =   req['username']
+#         # passw_value         =   req['passowrd']
+#         # passw_check_value   =   req['password2']
+#         # transactions()
+#     else:
+#         return render_template('login.html', title=title)
+#         ## MAKE LOGIN HTML PAGE
 
 
 @app.route('/transactions', methods=["POST", "GET"])

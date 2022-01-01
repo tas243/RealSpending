@@ -1,31 +1,26 @@
-import psycopg2
-from config import dbchar
-##### Still some problems with integrating in line 90: if db_uservalue != username_value:
-# NameError: name 'db_uservalue' is not defined
-def search_user(username_value,valuefinder):
-    values = ['pk', 'first', 'last', 'username', 'password', 'date']
-    finder = []
-    st = ''
-    for value in valuefinder:
-        if value in values:
-            for i,j in enumerate(values):
-                if value == j:
-                    finder.append(value)
-                    st += "%s," % j
-        else:
-            print('"' + value + '"'  + ' is not a query tool')
-    length = len(st)
-    s = st[0:length-1]
-    
-    con = dbchar()
-    query = "SELECT %s FROM function.users WHERE username = '%s';" % (s, username_value)
-    cur = con.cursor()
-    cur.execute(query)
-    data = cur.fetchone()
-    return data
-    con.close()
+## Test on how to change definitions once the user creates a login/signs in
 
-valuefinder = ['username','password','first']
-username_value = 'tas243'
-user = search_user(username_value,valuefinder)
-print(user)
+from flask import Flask, request
+from flask.templating import render_template
+
+app = Flask(__name__)
+
+@app.route('/', methods = ["POST", "GET"])
+def signup():
+    title = "Welcome! please feel free to create an account."
+    if request.method   ==  "POST":
+        req             =   request.form
+        # return jsonify(req)
+        # create a javascript object by uncommenting the above line
+        username_value  =   req['username']
+        transactions(username_value)
+    else:
+        return render_template('signup.html', title=title)
+
+@app.route('/transactions', methods=["POST", "GET"])
+def transactions(username_value):
+    title = 'Enter a transaction %s' % username_value
+    return render_template('entry.html', title=title)
+
+if __name__ == "__main__":
+    app.run(debug=True)
